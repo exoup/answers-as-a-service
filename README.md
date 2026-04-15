@@ -13,9 +13,9 @@ All endpoints are `GET` only.
 
 ### `/answer`
 
-**Method:** `GET`
-**Summary:** Returns a random answer.
-**Possible values:** `yes`, `no`, `maybe`
+**Method:** `GET`  
+**Summary:** Returns a random answer.  
+**Possible values:** `yes`, `no`, `maybe`  
 
 #### Query Parameters
 
