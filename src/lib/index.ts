@@ -1,0 +1,40 @@
+import yesRes from "@/pools/yes.json";
+import noRes from "@/pools/no.json";
+import maybeRes from "@/pools/maybe.json";
+
+import { InferInput } from 'valibot';
+import { answerSchema } from "@/index";
+
+type getFlatResponse = InferInput<typeof answerSchema>;
+
+type ResponsePool = 'yes' | 'no' | 'maybe';
+type FlatResponse = { pool: ResponsePool; answer: string };
+type PoolFlag = boolean | undefined;
+
+const mapPool = (pool: ResponsePool, answers: string[]): FlatResponse[] =>
+    answers.map((answer) => ({ pool, answer }));
+
+const coerceInput = (i: getFlatResponse[keyof getFlatResponse]): PoolFlag => {
+    if (i === 'true' || i === '') return true;
+    if (i === 'false') return false;
+    return undefined;
+};
+
+export const getFlatResponse = ({ yes, no, maybe }: getFlatResponse) => {
+    const poolsWithAnswers = [
+        { name: 'yes', enabled: coerceInput(yes), answers: yesRes },
+        { name: 'no', enabled: coerceInput(no), answers: noRes },
+        { name: 'maybe', enabled: coerceInput(maybe), answers: maybeRes },
+    ].filter(({ enabled }) => enabled);
+
+    const pools = poolsWithAnswers.map(({ name, answers }) => ({ name, answers }));
+
+    if (!pools.length) {
+        return { pool: '??', answer: 'why' };
+    }
+
+    const randomPool = pools[Math.floor(Math.random() * pools.length)];
+    const randomAnswer = randomPool.answers[Math.floor(Math.random() * randomPool.answers.length)];
+
+    return { pool: randomPool.name, answer: randomAnswer };
+};
