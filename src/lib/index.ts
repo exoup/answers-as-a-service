@@ -19,9 +19,11 @@ export const getFlatResponse = ({ yes, no, maybe }: getFlatResponse) => {
         { name: 'yes', enabled: coerceInput(yes), answers: yesRes },
         { name: 'no', enabled: coerceInput(no), answers: noRes },
         { name: 'maybe', enabled: coerceInput(maybe), answers: maybeRes },
-    ].filter(({ enabled }) => enabled);
-
-    const pools = poolsWithAnswers.map(({ name, answers }) => ({ name, answers }));
+    ];
+    const hasIncludedPools = poolsWithAnswers.some(({ enabled }) => enabled === true);
+    const pools = poolsWithAnswers
+        .filter(({ enabled }) => hasIncludedPools ? enabled === true : enabled !== false)
+        .map(({ name, answers }) => ({ name, answers }));
 
     if (!pools.length) {
         return { pool: '??', answer: 'why' };
