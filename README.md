@@ -5,15 +5,17 @@ A simple API for getting your answers to life's hard htiting questions.
 ## 🧈AssAss
 **A**n**s**wer**s** **as** a **S**ervice
 
+Fair warning. It can be vulgar at times. But not excessively.
+
 ## ⚒️ Usage
 
 All endpoints are `GET` only.
 
 ### `/answer`
 
-**Method:** `GET`  
-**Summary:** Returns a random answer.  
-**Possible values:** `yes`, `no`, `maybe`  
+**Method:** `GET`
+**Summary:** Returns a random answer.
+**Possible values:** `yes`, `no`, `maybe`
 
 #### Query Parameters
 
