@@ -24,6 +24,10 @@ app.get('/', sValidator('query', answerSchema, (result, c) => {
     );
 }));
 
+app.on('GET', ['/doc', '/docs'], (c) => {
+    return c.redirect('https://github.com/exoup/answers-as-a-service#%EF%B8%8F-usage', 301);
+});
+
 app.onError(handleError);
 app.notFound(handleMissing);
 
