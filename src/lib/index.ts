@@ -6,13 +6,7 @@ import { InferInput } from 'valibot';
 import { answerSchema } from "@/index";
 
 type getFlatResponse = InferInput<typeof answerSchema>;
-
-type ResponsePool = 'yes' | 'no' | 'maybe';
-type FlatResponse = { pool: ResponsePool; answer: string };
 type PoolFlag = boolean | undefined;
-
-const mapPool = (pool: ResponsePool, answers: string[]): FlatResponse[] =>
-    answers.map((answer) => ({ pool, answer }));
 
 const coerceInput = (i: getFlatResponse[keyof getFlatResponse]): PoolFlag => {
     if (i === 'true' || i === '') return true;
