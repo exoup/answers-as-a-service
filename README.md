@@ -30,41 +30,41 @@ All endpoints are `GET` only.
 | Rule | Behavior |
 | --- | --- |
 | No query params | Returns a random `yes`, `no`, or `maybe`. |
-| Param present with no value | Treats that answer type as included. Example: `/answer?yes` returns a `yes` response. |
+| Param present with no value | Treats that answer type as included. Example: `/?yes` returns a `yes` response. |
 | Param set to `false` | Excludes that answer type from the response pool. |
 | Multiple exclusions | Returns a random value from whatever remains. |
 
 #### Example Requests
 
 ```http
-GET /answer
+GET /
 ```
 
 ```http
-GET /answer?yes
+GET /?yes
 ```
 
 ```http
-GET /answer?no
+GET /?no
 ```
 
 ```http
-GET /answer?yes=false
+GET /?yes=false
 ```
 
 ```http
-GET /answer?yes=false&no=false
+GET /?yes=false&no=false
 ```
 
 #### Example Responses
 
 | Request | Example response |
 | --- | --- |
-| `GET /answer` | (`yes` \| `no` \|`maybe`) |
-| `GET /answer?yes` | `yes` |
-| `GET /answer?no` | `no` |
-| `GET /answer?yes=false` | `no` or `maybe` |
-| `GET /answer?yes=false&no=false` | `maybe` |
+| `GET /` | (`yes` \| `no` \|`maybe`) |
+| `GET /?yes` | `yes` |
+| `GET /?no` | `no` |
+| `GET /?yes=false` | `no` or `maybe` |
+| `GET /?yes=false&no=false` | `maybe` |
 
 
 ### `/doc` or `/docs`
