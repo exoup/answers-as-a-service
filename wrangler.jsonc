@@ -11,5 +11,9 @@
             "head_sampling_rate": 1
         }
     },
-    "workers_dev": true
+    "workers_dev": true,
+    "route": {
+        "custom_domain": true,
+        "pattern": "answers.li"
+    }
 }
