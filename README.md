@@ -1,6 +1,6 @@
 # ⁉️ Answers as a Service (Pronounced **AssAss**)
 
-A simple API for getting your answers to life's hard htiting questions.
+A simple API for getting your answers to life's hard hitting questions.
 
 ## 🧈AssAss
 **A**n**s**wer**s** **as** a **S**ervice
@@ -9,9 +9,15 @@ Fair warning. It can be vulgar at times. But not excessively.
 
 ## ⚒️ Usage
 
+**Base Url**
+
+```
+https://answers.li/
+```
+
 All endpoints are `GET` only.
 
-### `/`
+### `/` or `/me`
 
 **Method:** `GET`
 **Summary:** Returns a random answer.
