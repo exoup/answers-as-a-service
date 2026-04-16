@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { accepts } from 'hono/accepts'
 import { HTTPException } from 'hono/http-exception';
 import { handleError, handleMissing } from '@/error';
 import { getFlatResponse } from '@/lib';
@@ -19,9 +20,24 @@ app.on('GET', ['/', '/me'], sValidator('query', answerSchema, (result, c) => {
         message: result.error.flatMap((error) => error.message).join(', ')
     });
 
-    return c.json(
-        getFlatResponse(result.data)
-    );
+    const response = getFlatResponse(result.data);
+
+    const type = accepts(c, {
+        header: 'Accept',
+        supports: ['*/*', 'application/json', 'text/html', 'text/plain'],
+        default: 'text/html',
+    });
+
+    switch (type) {
+        case 'application/json':
+        case '*/*':
+            return c.json(response);
+        case 'text/plain':
+            return c.text(response.answer);
+        case 'text/html':
+        default:
+            return c.html('<h1>' + response.answer + '</h1>');
+    };
 }));
 
 app.on('GET', ['/doc', '/docs'], (c) => {
