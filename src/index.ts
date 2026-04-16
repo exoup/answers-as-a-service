@@ -13,7 +13,7 @@ export const answerSchema = v.partial(v.object({
     maybe: v.picklist(['true', 'false', ''], "Invalid value for 'maybe'. Expected one of 'true', 'false', ''")
 }));
 
-app.get('/', sValidator('query', answerSchema, (result, c) => {
+app.on('GET', ['/', '/me'], sValidator('query', answerSchema, (result, c) => {
     if (!result.success) throw new HTTPException(400, {
         cause: "BAD_REQUEST",
         message: result.error.flatMap((error) => error.message).join(', ')
