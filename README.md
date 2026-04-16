@@ -11,11 +11,11 @@ Fair warning. It can be vulgar at times. But not excessively.
 
 All endpoints are `GET` only.
 
-### `/answer`
+### `/`
 
-**Method:** `GET`  
-**Summary:** Returns a random answer.  
-**Possible values:** `yes`, `no`, `maybe`  
+**Method:** `GET`
+**Summary:** Returns a random answer.
+**Possible values:** `yes`, `no`, `maybe`
 
 #### Query Parameters
 
@@ -65,3 +65,9 @@ GET /answer?yes=false&no=false
 | `GET /answer?no` | `no` |
 | `GET /answer?yes=false` | `no` or `maybe` |
 | `GET /answer?yes=false&no=false` | `maybe` |
+
+
+### `/doc` or `/docs`
+
+**Method:** `GET`
+**Summary:** Redirects to usage docs.
