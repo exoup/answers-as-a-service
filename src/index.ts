@@ -6,11 +6,7 @@ import { getFlatResponse } from '@/lib';
 import * as v from 'valibot';
 import { sValidator } from '@hono/standard-validator';
 
-type Bindings = {
-    ASSETS: Fetcher
-};
-
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono();
 
 export const answerSchema = v.partial(v.object({
     yes: v.optional(v.picklist(['true', 'false', ''], "Invalid value for 'yes'. Expected one of 'true', 'false', ''")),
