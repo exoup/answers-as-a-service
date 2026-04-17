@@ -25,16 +25,20 @@ app.on(
             message: result.error.flatMap((error) => error.message).join(', ')
         });
     }),
-    async (c) => {
+    (c) => {
         const response = getFlatResponse(c.req.valid('query'));
         const type = accepts(c, {
             header: 'Accept',
-            supports: ['text/html', 'application/json', 'text/plain'],
+            supports: ['text/html', 'application/json', 'text/plain', '*/*'],
             default: 'application/json',
         });
+        const responseType = c.req.path === '/me' && type === 'text/html'
+            ? 'application/json'
+            : type;
 
-        switch (type) {
+        switch (responseType) {
             case 'application/json':
+            case '*/*':
                 return c.json(response);
             case 'text/plain':
                 return c.text(response.answer);
