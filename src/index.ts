@@ -6,7 +6,11 @@ import { getFlatResponse } from '@/lib';
 import * as v from 'valibot';
 import { sValidator } from '@hono/standard-validator';
 
-const app = new Hono();
+type Bindings = {
+    ASSETS: Fetcher
+};
+
+const app = new Hono<{ Bindings: Bindings }>();
 
 export const answerSchema = v.partial(v.object({
     yes: v.optional(v.picklist(['true', 'false', ''], "Invalid value for 'yes'. Expected one of 'true', 'false', ''")),
@@ -14,31 +18,34 @@ export const answerSchema = v.partial(v.object({
     maybe: v.picklist(['true', 'false', ''], "Invalid value for 'maybe'. Expected one of 'true', 'false', ''")
 }));
 
-app.on('GET', ['/', '/me'], sValidator('query', answerSchema, (result, c) => {
-    if (!result.success) throw new HTTPException(400, {
-        cause: "BAD_REQUEST",
-        message: result.error.flatMap((error) => error.message).join(', ')
-    });
+app.on(
+    'GET',
+    ['/', '/me'],
+    sValidator('query', answerSchema, (result) => {
+        if (!result.success) throw new HTTPException(400, {
+            cause: "BAD_REQUEST",
+            message: result.error.flatMap((error) => error.message).join(', ')
+        });
+    }),
+    async (c) => {
+        const response = getFlatResponse(c.req.valid('query'));
+        const type = accepts(c, {
+            header: 'Accept',
+            supports: ['text/html', 'application/json', 'text/plain'],
+            default: 'application/json',
+        });
 
-    const response = getFlatResponse(result.data);
-
-    const type = accepts(c, {
-        header: 'Accept',
-        supports: ['*/*', 'application/json', 'text/html', 'text/plain'],
-        default: 'text/html',
-    });
-
-    switch (type) {
-        case 'application/json':
-        case '*/*':
-            return c.json(response);
-        case 'text/plain':
-            return c.text(response.answer);
-        case 'text/html':
-        default:
-            return c.html('<h1>' + response.answer + '</h1>');
-    };
-}));
+        switch (type) {
+            case 'application/json':
+                return c.json(response);
+            case 'text/plain':
+                return c.text(response.answer);
+            case 'text/html':
+            default:
+                return c.env.ASSETS.fetch(new URL('/index.html', c.req.url));
+        };
+    }
+);
 
 app.on('GET', ['/doc', '/docs'], (c) => {
     return c.redirect('https://github.com/exoup/answers-as-a-service#%EF%B8%8F-usage', 301);
