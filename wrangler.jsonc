@@ -7,7 +7,8 @@
         "binding": "ASSETS",
         "run_worker_first": [
             "/*",
-            "!/favicon.svg"
+            "!/*.svg",
+            "!/*.css"
         ],
     },
     "compatibility_date": "2026-04-15",
