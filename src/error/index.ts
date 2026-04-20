@@ -24,6 +24,6 @@ export const handleError = (err: Error, c: Context) => {
 export const handleMissing = (c: Context) => {
     return c.json({
         status: "NOT_FOUND",
-        message: missing[Math.floor(Math.random() * missing.length)]
+        message: missing[Math.floor(Math.random() * missing.length)] || "NOT_FOUND"
     }, 404);
 };

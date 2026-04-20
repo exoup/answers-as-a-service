@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answers as a Service</title>
+
+    <link type="text/plain" rel="author" href="https://answers.li/humans.txt" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <meta name="description" content="A simple API for getting your answers to life's hard hitting questions.">
+    <meta property="og:title" content="Answers as a service">
+    <meta property="og:description" content="An API to get the yes, no, or maybe you need in your life.">
+    <meta property="og:url" content="https://answers.li">
+    <meta property="og:site_name" content="Answers as a service">
+
+    <link rel="stylesheet" href="./stylesheet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <main>
+        <section class="hero-title">
+            <div class="text-content">
+                <h1>The answer is <em>yes.</em><br />Probably.</h1>
+                <p>
+                    <strong>Answers as a Service</strong> is a decision-making API for when you already know
+                    what you want to do but need an HTTP request to validate it.
+                    <br />
+                    Minor amounts of sass.*
+                </p>
+                <div class="actions">
+                    <a href="/docs" target="_blank">Read the docs</a>
+                    <a href="https://github.com/exoup/answers-as-a-service" target="_blank">Source ↗</a>
+                </div>
+            </div>
+
+            <div class="answer-wrapper">
+                <div class="answer-box">
+                    <div class="answer-request">
+                        <span class="method">GET</span> <span>https://answers.li/me</span>
+                    </div>
+                    <div class="answer-response">
+                        <div class="response-label">Response</div>
+                        <div class="response-body">
+                            <strong id="live-response" aria-live="polite"></strong>
+                        </div>
+                        <div class="response-action"><button id="ask-btn">↻ ask again</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            <strong>Answers as a Service</strong>
+            <span class="tiny">* possible vulgarity too</span>
+        </div>
+        <div class="footer-right">
+            <a href="/humans.txt">humans.txt</a>
+            <a href="https://github.com/exoup/answers-as-a-service">GitHub</a>
+        </div>
+    </footer>
+
+    <script>
+        const askBtn = document.getElementById('ask-btn');
+        const liveResponse = document.getElementById('live-response');
+        const errorResponse = "Here's your sign.";
+
+        const fetchAnswer = async () => {
+            askBtn.disabled = true;
+
+            try {
+                const res = await fetch('/me', {
+                    headers: {
+                        Accept: 'text/plain',
+                    },
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Request failed with status ${res.status}`);
+                }
+
+                liveResponse.innerText = await res.text();
+            } catch (error) {
+                console.error(error);
+                liveResponse.innerText = errorResponse;
+            } finally {
+                askBtn.disabled = false;
+            }
+        };
+
+        askBtn.addEventListener('click', fetchAnswer);
+        window.addEventListener('load', fetchAnswer);
+    </script>
+</body>
+
+</html>
