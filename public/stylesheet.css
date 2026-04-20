@@ -89,7 +89,7 @@ main {
     display: flex;
     flex-direction: row;
     gap: 2rem;
-    align-items: center;
+    align-items: flex-end;
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -99,8 +99,17 @@ main {
 
     .answer-wrapper {
         padding: 0 1rem;
-        margin: auto 0;
-        flex: 1;
+        margin: 0;
+        margin-bottom: 7.5rem;
+        align-self: flex-end;
+        flex: 0 1 auto;
+        width: min(100%, 25rem);
+
+        @media (max-width: 768px) {
+            align-self: stretch;
+            width: 100%;
+            padding: 0;
+        }
 
         & .answer-box {
             box-shadow:
@@ -148,7 +157,8 @@ main {
                     font-family: 'DM Serif Display', serif;
                     color: var(--accent);
                     padding: 1rem 0 1.5rem 0;
-                    line-height: 1;
+                    line-height: 1.05;
+                    overflow-wrap: anywhere;
                 }
 
                 .response-action {
@@ -167,6 +177,11 @@ main {
                         border-radius: var(--radius);
                         transition: all 0.15s ease;
                         user-select: none;
+
+                        &:disabled {
+                            cursor: wait;
+                            opacity: 0.7;
+                        }
 
                         &:hover {
                             background: var(--text);

@@ -37,7 +37,7 @@
                     Minor amounts of sass.*
                 </p>
                 <div class="actions">
-                    <a href="#docs">Read the docs</a>
+                    <a href="/docs" target="_blank">Read the docs</a>
                     <a href="https://github.com/exoup/answers-as-a-service" target="_blank">Source ↗</a>
                 </div>
             </div>
@@ -49,7 +49,9 @@
                     </div>
                     <div class="answer-response">
                         <div class="response-label">Response</div>
-                        <div class="response-body"><strong id="live-response">Most definitely.</strong></div>
+                        <div class="response-body">
+                            <strong id="live-response" aria-live="polite"></strong>
+                        </div>
                         <div class="response-action"><button id="ask-btn">↻ ask again</button></div>
                     </div>
                 </div>
@@ -67,6 +69,38 @@
             <a href="https://github.com/exoup/answers-as-a-service">GitHub</a>
         </div>
     </footer>
+
+    <script>
+        const askBtn = document.getElementById('ask-btn');
+        const liveResponse = document.getElementById('live-response');
+        const errorResponse = "Here's your sign.";
+
+        const fetchAnswer = async () => {
+            askBtn.disabled = true;
+
+            try {
+                const res = await fetch('/me', {
+                    headers: {
+                        Accept: 'text/plain',
+                    },
+                });
+
+                if (!res.ok) {
+                    throw new Error(`Request failed with status ${res.status}`);
+                }
+
+                liveResponse.innerText = await res.text();
+            } catch (error) {
+                console.error(error);
+                liveResponse.innerText = errorResponse;
+            } finally {
+                askBtn.disabled = false;
+            }
+        };
+
+        askBtn.addEventListener('click', fetchAnswer);
+        window.addEventListener('load', fetchAnswer);
+    </script>
 </body>
 
 </html>
