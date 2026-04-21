@@ -101,9 +101,7 @@ main {
 
     .answer-wrapper {
         padding: 0 1rem;
-        margin: 0;
-        margin-bottom: 7.5rem;
-        align-self: flex-end;
+        align-self: flex-start;
         flex: 0 1 auto;
         width: min(100%, 25rem);
 
