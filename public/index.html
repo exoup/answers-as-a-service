@@ -49,10 +49,13 @@
                     </div>
                     <div class="answer-response">
                         <div class="response-label">Response</div>
-                        <div class="response-body">
-                            <strong id="live-response" aria-live="polite"></strong>
+                        <div class="response-body" aria-busy="false">
+                            <strong id="live-response" role="status" aria-live="polite" aria-atomic="true"></strong>
                         </div>
-                        <div class="response-action"><button id="ask-btn">↻ ask again</button></div>
+                        <div class="response-action">
+                            <button id="view-toggle" type="button" aria-controls="live-response" aria-pressed="false">accept: text/plain</button>
+                            <button id="ask-btn" type="button" aria-label="Fetch a new answer">↻ ask again</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,15 +76,38 @@
     <script>
         const askBtn = document.getElementById('ask-btn');
         const liveResponse = document.getElementById('live-response');
+        const viewToggle = document.getElementById('view-toggle');
+        const responseBody = document.querySelector('.response-body');
         const errorResponse = "Here's your sign.";
+        let currentResponse = null;
+        let isJsonView = false;
+
+        const syncViewToggle = () => {
+            viewToggle.innerText = isJsonView ? 'accept: application/json' : 'accept: text/plain';
+            viewToggle.setAttribute('aria-pressed', String(isJsonView));
+        };
+
+        const renderResponse = () => {
+            if (!currentResponse) {
+                syncViewToggle();
+                return;
+            }
+
+            responseBody.classList.toggle('is-json', isJsonView);
+            liveResponse.innerText = isJsonView
+                ? JSON.stringify(currentResponse, null, 2)
+                : currentResponse.answer;
+            syncViewToggle();
+        };
 
         const fetchAnswer = async () => {
             askBtn.disabled = true;
+            responseBody.setAttribute('aria-busy', 'true');
 
             try {
                 const res = await fetch('/me', {
                     headers: {
-                        Accept: 'text/plain',
+                        Accept: 'application/json',
                     },
                 });
 
@@ -89,16 +115,25 @@
                     throw new Error(`Request failed with status ${res.status}`);
                 }
 
-                liveResponse.innerText = await res.text();
+                currentResponse = await res.json();
+                renderResponse();
             } catch (error) {
                 console.error(error);
+                currentResponse = null;
+                responseBody.classList.remove('is-json');
                 liveResponse.innerText = errorResponse;
             } finally {
                 askBtn.disabled = false;
+                responseBody.setAttribute('aria-busy', 'false');
             }
         };
 
         askBtn.addEventListener('click', fetchAnswer);
+        viewToggle.addEventListener('click', () => {
+            isJsonView = !isJsonView;
+            renderResponse();
+        });
+        syncViewToggle();
         window.addEventListener('load', fetchAnswer);
     </script>
 </body>
